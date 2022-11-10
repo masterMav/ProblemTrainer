@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./partials/head') %>
+  <body class="bg-light">
+    <nav class="shadow lead navbar navbar-light">
+      <div class="container">
+        <a class="navbar-brand ms-5" href="#">
+          <h1 id="main-heading">Problem Trainer</h1>
+        </a>
+      </div>
+    </nav>
+
+    <section>
+      <div class="lead container text-center mt-2">
+        <h2>Welcome user</h2>
+
+        <form action="" class="mt-5">
+          <label for="qn" class="form-label me-3">Paste Problem Link: </label>
+          <input type="text" id="qn" name="qn" required />
+          <button type="submit" class="btn btn-dark">Add</button>
+        </form>
+
+        <!-- Table: List all problems -->
+        <div class="mt-5 px-5 mx-5">
+          <% if(qns.length > 0) {%>
+
+          <table class="table shadow">
+            <thead class="table-light">
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Problem Links</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for(let i = 0; i < qns.length; i++) { %>
+
+              <tr id="table-row">
+                <th scope="row"><%= i + 1 %></th>
+                <td><%= qns[i] %></td>
+              </tr>
+
+              <% } %>
+            </tbody>
+          </table>
+          <% } else { %>
+          <p>No qns listed</p>
+          <% } %>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
