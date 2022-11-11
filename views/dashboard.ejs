@@ -15,10 +15,8 @@
         <h2>Welcome <%=handle%></h2>
 
         <!-- Add List Item -->
-        <!-- #backticks -->
-        <%const endpoint = `/users/${handle}` %>
 
-        <form class="mt-5" action="<%endpoint%>" method="POST">
+        <form class="mt-5" action="/users/<%=handle%>" method="POST">
           <label for="problemLink" class="form-label me-3">
             Paste Problem Link:
           </label>
@@ -42,7 +40,19 @@
 
               <tr id="table-row">
                 <th scope="row"><%= i + 1 %></th>
-                <td><%= qns[i] %></td>
+                <td>
+                  <%= qns[i].problemName %>
+                  <form action="/delete" method="POST" id="trow-delete">
+                    <input type="hidden" name="handle" value="<%= handle %>" />
+                    <input type="hidden" name="_id" value="<%= qns[i]._id %>" />
+                    <button
+                      id="trow-delete-button"
+                      class="btn btn-sm btn-danger"
+                    >
+                      Delete
+                    </button>
+                  </form>
+                </td>
               </tr>
 
               <% } %>

@@ -39,8 +39,9 @@ app.get("/users/:handle", (req, res) => {
   const handle = req.params.handle;
   User.find({ handle: handle })
     .then((results) => {
+      // qns is an array of objects with _id & problemName
       const qns = results.map((result) => {
-        return result.problemName;
+        return { _id: result._id, problemName: result.problemName };
       });
       res.render("dashboard", { title: "Dashboard", qns, handle });
     })
@@ -55,6 +56,15 @@ app.post("/users/:handle", (req, res) => {
   entry
     .save()
     .then((result) => res.redirect(req.url))
+    .catch((err) => console.log(err));
+});
+
+// DELETE requests
+app.post("/delete", (req, res) => {
+  User.findByIdAndDelete(req.body._id)
+    .then((result) => {
+      res.redirect(`/users/${req.body.handle}`);
+    })
     .catch((err) => console.log(err));
 });
 
