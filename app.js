@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const User = require("./models/user");
 
 dotenv.config();
 const app = express();
@@ -25,16 +26,36 @@ app.set("view engine", "ejs");
 
 // Middleware & static files
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
+// Routes
 app.get("/", (req, res) => {
   res.render("home", { title: "Home" });
 });
 
-app.get("/users/:id", (req, res) => {
-  const qns = ["qn1", "qn2", "qn3", "qn4", "qn5", "qn6"];
+app.get("/users/:handle", (req, res) => {
+  const handle = req.url.substring(7);
 
-  res.render("dashboard", { title: "Dashboard", qns });
+  User.find({ handle: handle })
+    .then((results) => {
+      const qns = results.map((result) => {
+        return result.problemName;
+      });
+      res.render("dashboard", { title: "Dashboard", qns, handle });
+    })
+    .catch((err) => console.log(err));
+});
+
+// POST requests
+app.post("/users/:handle", (req, res) => {
+  const handle = req.url.substring(7);
+  const entry = new User({ handle, problemName: req.body.problemName });
+
+  entry
+    .save()
+    .then((result) => res.redirect(req.url))
+    .catch((err) => console.log(err));
 });
 
 app.use((req, res) => {

@@ -12,11 +12,17 @@
 
     <section>
       <div class="lead container text-center mt-2">
-        <h2>Welcome user</h2>
+        <h2>Welcome <%=handle%></h2>
 
-        <form action="" class="mt-5">
-          <label for="qn" class="form-label me-3">Paste Problem Link: </label>
-          <input type="text" id="qn" name="qn" required />
+        <!-- Add List Item -->
+        <!-- #backticks -->
+        <%const endpoint = `/users/${handle}` %>
+
+        <form class="mt-5" action="<%endpoint%>" method="POST">
+          <label for="problemLink" class="form-label me-3">
+            Paste Problem Link:
+          </label>
+          <input type="text" id="problemLink" name="problemName" required />
           <button type="submit" class="btn btn-dark">Add</button>
         </form>
 
