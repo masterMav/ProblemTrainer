@@ -10,18 +10,40 @@
       </div>
     </nav>
 
+    <% if(invalidUrl === "1") { %>
+    <div class="alert alert-danger" role="alert">
+      INVALID URL: Please enter correct url
+    </div>
+    <% } %>
+
     <section>
       <div class="lead container text-center mt-2">
         <h2>Welcome <%=handle%></h2>
 
         <!-- Add List Item -->
 
-        <form class="mt-5" action="/users/<%=handle%>" method="POST">
-          <label for="problemLink" class="form-label me-3">
-            Paste Problem Link:
-          </label>
-          <input type="text" id="problemLink" name="problemLink" required />
-          <button type="submit" class="btn btn-dark">Add</button>
+        <form
+          class="mt-5 problemLink-form"
+          action="/users/<%=handle%>"
+          method="POST"
+        >
+          <div class="input-group mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter CodeForces problem Link"
+              name="problemLink"
+              required
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="submit"
+              id="button-addon2"
+            >
+              Add
+            </button>
+          </div>
+          <!-- <button type="submit" class="btn btn-dark">Add</button> -->
         </form>
 
         <!-- Table: List all problems -->

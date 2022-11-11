@@ -37,15 +37,16 @@ app.get("/", (req, res) => {
   res.render("home", { title: "Home" });
 });
 
-app.get("/users/:handle", (req, res) => {
+app.get("/users/:handle/:invalidUrl", (req, res) => {
   const handle = req.params.handle;
+  const invalidUrl = req.params.invalidUrl;
   User.find({ handle })
     .then((results) => {
       // qns is an array of objects with _id & problemName
       const qns = results.map((result) => {
         return { _id: result._id, problemName: result.problemName };
       });
-      res.render("dashboard", { title: "Dashboard", qns, handle });
+      res.render("dashboard", { title: "Dashboard", qns, handle, invalidUrl });
     })
     .catch((err) => console.log(err));
 });
@@ -66,10 +67,10 @@ app.post("/users/:handle", (req, res) => {
 
       entry
         .save()
-        .then((result) => res.redirect(req.url))
+        .then((result) => res.redirect(`${req.url}/0`))
         .catch((err) => console.log(err));
     } else {
-      console.log("error");
+      res.redirect(`${req.url}/1`);
     }
   });
 });
@@ -78,11 +79,12 @@ app.post("/users/:handle", (req, res) => {
 app.post("/delete", (req, res) => {
   User.findByIdAndDelete(req.body._id)
     .then((result) => {
-      res.redirect(`/users/${req.body.handle}`);
+      res.redirect(`/users/${req.body.handle}/0`);
     })
     .catch((err) => console.log(err));
 });
 
+// 404
 app.use((req, res) => {
   res.status(404).render("404", { title: "Not found" });
 });
