@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const User = require("./models/user");
 const colors = require("colors");
+const request = require("request");
+const cheerio = require("cheerio");
 
 dotenv.config();
 const app = express();
@@ -37,7 +39,7 @@ app.get("/", (req, res) => {
 
 app.get("/users/:handle", (req, res) => {
   const handle = req.params.handle;
-  User.find({ handle: handle })
+  User.find({ handle })
     .then((results) => {
       // qns is an array of objects with _id & problemName
       const qns = results.map((result) => {
@@ -50,13 +52,26 @@ app.get("/users/:handle", (req, res) => {
 
 // POST requests
 app.post("/users/:handle", (req, res) => {
-  const handle = req.params.handle;
-  const entry = new User({ handle, problemName: req.body.problemName });
+  // Scrape problem name
+  request(`${req.body.problemLink}`, (error, response, html) => {
+    if (!error && response.statusCode === 200) {
+      const $ = cheerio.load(html);
+      const ps = $(".problem-statement .header .title");
 
-  entry
-    .save()
-    .then((result) => res.redirect(req.url))
-    .catch((err) => console.log(err));
+      // Save in DB & redirect
+      const entry = new User({
+        handle: req.params.handle,
+        problemName: ps.text(),
+      });
+
+      entry
+        .save()
+        .then((result) => res.redirect(req.url))
+        .catch((err) => console.log(err));
+    } else {
+      console.log("error");
+    }
+  });
 });
 
 // DELETE requests
