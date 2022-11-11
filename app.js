@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const User = require("./models/user");
+const colors = require("colors");
 
 dotenv.config();
 const app = express();
@@ -15,9 +16,9 @@ mongoose
     useUnifiedTopology: true,
   })
   .then((result) => {
-    console.log("Connected to DB");
+    console.log("Connected to DB".cyan.underline);
     app.listen(port, () => {
-      console.log(`Listening on port ${port}`);
+      console.log(`Listening on port ${port}`.cyan.underline);
     });
   })
   .catch((err) => console.log(err));
@@ -35,8 +36,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/users/:handle", (req, res) => {
-  const handle = req.url.substring(7);
-
+  const handle = req.params.handle;
   User.find({ handle: handle })
     .then((results) => {
       const qns = results.map((result) => {
@@ -49,7 +49,7 @@ app.get("/users/:handle", (req, res) => {
 
 // POST requests
 app.post("/users/:handle", (req, res) => {
-  const handle = req.url.substring(7);
+  const handle = req.params.handle;
   const entry = new User({ handle, problemName: req.body.problemName });
 
   entry
