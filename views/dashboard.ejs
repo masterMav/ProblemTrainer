@@ -14,6 +14,15 @@
     <div class="alert alert-danger" role="alert">
       INVALID URL: Please enter correct url
     </div>
+    <% } else if(invalidUrl === "2") { %>
+    <div class="alert alert-danger" role="alert">
+      CF API ERROR: This error is on CodeForces end & we cannot function until
+      the CF API is active again.
+    </div>
+    <% } else if(invalidUrl === "3") { %>
+    <div class="alert alert-danger" role="alert">
+      This Problem is already present in the list.
+    </div>
     <% } %>
 
     <section>
