@@ -1,7 +1,3 @@
-#table-row:hover {
-  background-color: #c4c4c4;
-}
-
 #table-row {
   position: relative;
 }
@@ -19,4 +15,22 @@
 .problemLink-form {
   width: 50%;
   margin: auto;
+}
+
+.trow-0:hover {
+  background-color: #c4c4c4;
+}
+
+.trow-1 {
+  background-color: rgba(255, 0, 51, 0.6);
+}
+.trow-1:hover {
+  background-color: #ff0000;
+}
+
+.trow-2 {
+  background-color: rgba(0, 255, 0, 0.511);
+}
+.trow-2:hover {
+  background-color: #3ed625;
 }

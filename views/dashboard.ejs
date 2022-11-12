@@ -17,7 +17,7 @@
     <% } %>
 
     <section>
-      <div class="lead container text-center mt-2">
+      <div class="lead container-lg text-center mt-2">
         <h2>Welcome <%=handle%></h2>
 
         <!-- Add List Item -->
@@ -43,33 +43,38 @@
               Add
             </button>
           </div>
-          <!-- <button type="submit" class="btn btn-dark">Add</button> -->
         </form>
 
         <!-- Table: List all problems -->
-        <div class="mt-5 px-5 mx-5">
+        <div class="mt-5 px-lg-5 mx-lg-5">
           <% if(qns.length > 0) {%>
 
           <table class="table shadow">
             <thead class="table-light">
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">Problem Names</th>
+                <th scope="col" width="10%">#</th>
+                <th scope="col" width="60%">Problem Names</th>
+                <th scope="col" width="25%">Verdict</th>
+                <th scope="col" width="5%"></th>
               </tr>
             </thead>
             <tbody>
               <% for(let i = 0; i < qns.length; i++) { %>
 
-              <tr id="table-row">
+              <tr id="table-row" class="trow-<%=qns[i].verdict%>">
                 <th scope="row"><%= i + 1 %></th>
+                <td><%= qns[i].problemName %></td>
                 <td>
-                  <%= qns[i].problemName %>
+                  <% if(qns[i].verdict === 2) { %> AC <% } else
+                  if(qns[i].verdict === 1) { %> WA <% } else { %> - <% } %>
+                </td>
+                <td>
                   <form action="/delete" method="POST" id="trow-delete">
                     <input type="hidden" name="handle" value="<%= handle %>" />
                     <input type="hidden" name="_id" value="<%= qns[i]._id %>" />
                     <button
                       id="trow-delete-button"
-                      class="btn btn-sm btn-danger"
+                      class="btn btn-sm btn-secondary"
                     >
                       Delete
                     </button>
@@ -81,7 +86,7 @@
             </tbody>
           </table>
           <% } else { %>
-          <p>No qns listed</p>
+          <p>No Problems Added</p>
           <% } %>
         </div>
       </div>
