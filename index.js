@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const userRoutes = require("./routes/userRoutes");
 const colors = require("colors");
+var path = require("path"); //#
 
 dotenv.config();
 const app = express();
@@ -26,7 +27,8 @@ mongoose
 app.set("view engine", "ejs");
 
 // Middleware & static files
-app.use(express.static(__dirname + "public"));
+// app.use(express.static("public")); //#
+app.use(express.static(path.join(__dirname + "public"))); //#
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
