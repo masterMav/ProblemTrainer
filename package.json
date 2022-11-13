@@ -11,7 +11,7 @@
     "request": "^2.88.2"
   },
   "name": "problemtrainer",
-  "version": "1.0.0",
+  "version": "1",
   "description": "\"Problem training app\"",
   "main": "app.js",
   "engines": {
