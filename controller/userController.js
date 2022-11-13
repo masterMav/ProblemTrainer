@@ -2,7 +2,8 @@ const User = require("../models/user");
 const request = require("request");
 const cheerio = require("cheerio");
 const { response } = require("express");
-
+const fetch = (url) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(url));
 const home = (req, res) => {
   res.render("home", { title: "Home", errorCode: req.params.id });
 };
