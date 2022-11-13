@@ -7,8 +7,60 @@
         <a class="navbar-brand ms-5" href="#">
           <h1 id="main-heading">Problem Trainer</h1>
         </a>
+        <!-- User Login -->
+        <form class="d-flex" action="/login" method="POST">
+          <input
+            class="form-control me-2"
+            type="text"
+            placeholder="CodeForces Handle"
+            name="userHandle"
+            required
+          />
+          <button class="btn btn-outline-success" type="submit">Login</button>
+        </form>
       </div>
     </nav>
+
+    <% if(errorCode === "1") { %>
+    <div class="alert alert-danger" role="alert">
+      CF API ERROR: This error is on CodeForces end & we cannot function until
+      the CF API is active again.
+    </div>
+    <% } else if(errorCode === "2") { %>
+    <div class="alert alert-danger" role="alert">
+      HANDLE NOT FOUND IN CODEFORCES DATABASE. Please enter valid CF Handle.
+    </div>
+    <% } %>
+
+    <section>
+      <div class="container d-flex justify-content-between mt-3">
+        <img
+          class="img-fluid w-50 me-5 d-none d-sm-block"
+          src="../images/coder.jpg"
+        />
+        <div>
+          <!-- Heading -->
+          <h1 class="text-center my-5">
+            Become a Pro at <br />
+            <span class="text-warning"> Competitive Programming </span>
+          </h1>
+
+          <!-- About -->
+          <ul class="lead my-5">
+            <li class="mb-2">Make a list of all the problems to solve.</li>
+            <li class="mb-2">
+              After your submission the list is updated automatically using
+              <span class="text-primary fw-bold">CodeForces API.</span>
+            </li>
+            <li class="mb-2">
+              Just paste the problem link, Problem name & Submission verdict is
+              added accordingly.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- container -->
+    </section>
 
     <%- include('./partials/footer')%>
   </body>

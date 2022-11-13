@@ -1,9 +1,10 @@
 const User = require("../models/user");
 const request = require("request");
 const cheerio = require("cheerio");
+const { response } = require("express");
 
 const home = (req, res) => {
-  res.render("home", { title: "Home" });
+  res.render("home", { title: "Home", errorCode: req.params.id });
 };
 
 const userList = (req, res) => {
@@ -112,9 +113,30 @@ const userList_delete = (req, res) => {
     .catch((err) => console.log(err));
 };
 
+const login = (req, res) => {
+  const handle = req.body.userHandle;
+  const API_URI = `https://codeforces.com/api/user.info?handles=${handle}`;
+  const checkFetch = (response) => {
+    if (response.status === 400) {
+      res.redirect("/home/2");
+      throw new Error("INVALID HANDLE");
+    } else if (!response.ok) {
+      res.redirect("/home/1");
+      throw new Error("CF API ERROR");
+    }
+    return response;
+  };
+  fetch(API_URI)
+    .then(checkFetch)
+    .then((response) => response.json())
+    .then((data) => res.redirect(`/users/${handle}/0`))
+    .catch((err) => console.log(err.message));
+};
+
 module.exports = {
   home,
   userList,
   userList_add,
   userList_delete,
+  login,
 };
