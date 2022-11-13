@@ -27,7 +27,7 @@ app.set("views", __dirname + "/views"); //#
 app.set("view engine", "ejs");
 
 // Middleware & static files
-app.use(express.static("public"));
+app.use(express.static(__dirname + "/public")); //previous .static("public")
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
