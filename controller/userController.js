@@ -1,9 +1,12 @@
 const User = require("../models/user");
+const Problem = require("../models/problem");
 const request = require("request");
 const cheerio = require("cheerio");
 const { response } = require("express");
 const fetch = (url) =>
   import("node-fetch").then(({ default: fetch }) => fetch(url));
+
+// Controller functions
 const home = (req, res) => {
   res.render("home", { title: "Home", errorCode: req.params.id });
 };
@@ -115,8 +118,6 @@ const userList_delete = (req, res) => {
 };
 
 const login = (req, res) => {
-  const handle = req.body.userHandle;
-  const API_URI = `https://codeforces.com/api/user.info?handles=${handle}`;
   const checkFetch = (response) => {
     if (response.status === 400) {
       res.redirect("/home/2");
@@ -127,10 +128,56 @@ const login = (req, res) => {
     }
     return response;
   };
+
+  //fetch all problems from CF
+  const getAllProblems = () => {
+    fetch("https://codeforces.com/api/problemset.problems")
+      .then(checkFetch)
+      .then((response) => response.json())
+      .then((data) => {
+        let alreadyPresent = false;
+        // save new problems in collection: problems
+        data.result.problems.forEach((i) => {
+          if (alreadyPresent === false) {
+            Problem.findOne({
+              contestId: i.contestId,
+              index: i.index,
+              name: i.name,
+            })
+              .then((result) => {
+                if (result === null) {
+                  const newProblem = new Problem({
+                    contestId: i.contestId,
+                    index: i.index,
+                    name: i.name,
+                  });
+
+                  newProblem
+                    .save()
+                    .then((result) => console.log(result))
+                    .catch((err) => console.log(err));
+                } else {
+                  alreadyPresent = true;
+                }
+              })
+              .catch((err) => console.log(err));
+          }
+        });
+      })
+      .catch((err) => console.log(err.message));
+  };
+
+  //check user handle by fetch user.info
+  const handle = req.body.userHandle;
+  const API_URI = `https://codeforces.com/api/user.info?handles=${handle}`;
   fetch(API_URI)
     .then(checkFetch)
     .then((response) => response.json())
-    .then((data) => res.redirect(`/users/${handle}/0`))
+    .then((data) => {
+      res.redirect(`/users/${handle}/0`);
+      // # update DB here to run parallely
+      getAllProblems();
+    })
     .catch((err) => console.log(err.message));
 };
 
