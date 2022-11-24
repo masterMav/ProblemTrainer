@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "cheerio": "^1.0.0-rc.12",
     "colors": "^1.4.0",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
@@ -9,8 +8,7 @@
     "morgan": "^1.10.0",
     "node-fetch": "^3.3.0",
     "nodemon": "^2.0.20",
-    "path": "^0.12.7",
-    "request": "^2.88.2"
+    "path": "^0.12.7"
   },
   "name": "problemtrainer",
   "version": 2,

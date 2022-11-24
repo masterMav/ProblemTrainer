@@ -1,7 +1,5 @@
 const User = require("../models/user");
 const Problem = require("../models/problem");
-const request = require("request");
-const cheerio = require("cheerio");
 const { response } = require("express");
 const fetch = (url) =>
   import("node-fetch").then(({ default: fetch }) => fetch(url));
