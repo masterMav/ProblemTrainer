@@ -71,9 +71,20 @@
               <% for(let i = 0; i < qns.length; i++) { %>
 
               <tr id="table-row" class="trow-<%=qns[i].verdict%>">
-                <th scope="row"><%= i + 1 %></th>
-                <td><%= qns[i].problemName %></td>
-                <td>
+                <th
+                  scope="row"
+                  onClick="window.open('<%= qns[i].problemLink %>', '_blank')"
+                >
+                  <%= i + 1 %>
+                </th>
+                <td
+                  onClick="window.open('<%= qns[i].problemLink %>', '_blank')"
+                >
+                  <%= qns[i].problemName %>
+                </td>
+                <td
+                  onClick="window.open('<%= qns[i].problemLink %>', '_blank')"
+                >
                   <% if(qns[i].verdict === 2) { %> AC <% } else
                   if(qns[i].verdict === 1) { %> WA <% } else { %> - <% } %>
                 </td>

@@ -41,7 +41,7 @@ const userList = (req, res) => {
       //Render userDashboard with qns
       User.find({ handle })
         .then((results) => {
-          // qns is an array of objects with _id, problemName & verdict
+          // qns is an array of objects with _id, problemName, verdict & problemLink
           const qns = results.map((result) => {
             let updatedVerdict;
             if (subMap.get(result.problemName) === undefined)
@@ -52,6 +52,7 @@ const userList = (req, res) => {
               _id: result._id,
               problemName: result.problemName,
               verdict: updatedVerdict,
+              problemLink: result.problemLink,
             };
           });
 
@@ -96,6 +97,7 @@ const userList_add = (req, res) => {
                 const entry = new User({
                   handle: req.params.handle,
                   problemName: str,
+                  problemLink: `https://codeforces.com/contest/${codeArray[0]}/problem/${codeArray[1]}`,
                 });
 
                 entry
@@ -141,7 +143,7 @@ const login = (req, res) => {
     .then(checkFetch)
     .then((response) => response.json())
     .then((data) => {
-      res.redirect(`/users/${handle}/0`);
+      res.redirect(`/users/${data.result[0].handle}/0`);
     })
     .catch((err) => console.log(err.message));
 };
