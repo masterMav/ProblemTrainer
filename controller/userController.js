@@ -77,36 +77,43 @@ const userList = (req, res) => {
 };
 
 const userList_add = (req, res) => {
-  // Scrape problem name
-  request(`${req.body.problemLink}`, (error, response, html) => {
-    if (!error && response.statusCode === 200) {
-      const $ = cheerio.load(html);
-      const ps = $(".problem-statement .header .title");
+  // Ensure Valid code format
+  const codeArray = req.body.problemCode.split("_");
+  if (codeArray.length != 2 || codeArray[0] === "" || codeArray[1] === "") {
+    res.redirect(`${req.url}/1`);
+  } else {
+    // Search problemDB
+    Problem.findOne({ contestId: codeArray[0], index: codeArray[1] })
+      .then((result) => {
+        if (result === null) {
+          //Problem not found in problemDB
+          res.redirect(`${req.url}/1`);
+        } else {
+          //Search userDB
+          const str = `${codeArray[1]}. ${result.name}`;
+          User.findOne({ handle: req.params.handle, problemName: str })
+            .then((result) => {
+              if (result === null) {
+                // Save in userDB & redirect
+                const entry = new User({
+                  handle: req.params.handle,
+                  problemName: str,
+                });
 
-      User.findOne({ handle: req.params.handle, problemName: ps.text() })
-        .then((result) => {
-          if (result === null) {
-            // Save in DB & redirect
-            const entry = new User({
-              handle: req.params.handle,
-              problemName: ps.text(),
-            });
-
-            entry
-              .save()
-              .then((result) => res.redirect(`${req.url}/0`))
-              .catch((err) => console.log(err));
-          } else {
-            //Problem Already Exists in DB
-            res.redirect(`${req.url}/3`);
-          }
-        })
-        .catch((err) => console.log(err));
-    } else {
-      //INVALID URL
-      res.redirect(`${req.url}/1`);
-    }
-  });
+                entry
+                  .save()
+                  .then((result) => res.redirect(`${req.url}/0`))
+                  .catch((err) => console.log(err));
+              } else {
+                //Problem Already Exists in userDB
+                res.redirect(`${req.url}/3`);
+              }
+            })
+            .catch((err) => console.log(err));
+        }
+      })
+      .catch((err) => res.send(err));
+  }
 };
 
 const userList_delete = (req, res) => {
@@ -129,44 +136,6 @@ const login = (req, res) => {
     return response;
   };
 
-  //fetch all problems from CF
-  const getAllProblems = () => {
-    fetch("https://codeforces.com/api/problemset.problems")
-      .then(checkFetch)
-      .then((response) => response.json())
-      .then((data) => {
-        let alreadyPresent = false;
-        // save new problems in collection: problems
-        data.result.problems.forEach((i) => {
-          if (alreadyPresent === false) {
-            Problem.findOne({
-              contestId: i.contestId,
-              index: i.index,
-              name: i.name,
-            })
-              .then((result) => {
-                if (result === null) {
-                  const newProblem = new Problem({
-                    contestId: i.contestId,
-                    index: i.index,
-                    name: i.name,
-                  });
-
-                  newProblem
-                    .save()
-                    .then((result) => console.log(result))
-                    .catch((err) => console.log(err));
-                } else {
-                  alreadyPresent = true;
-                }
-              })
-              .catch((err) => console.log(err));
-          }
-        });
-      })
-      .catch((err) => console.log(err.message));
-  };
-
   //check user handle by fetch user.info
   const handle = req.body.userHandle;
   const API_URI = `https://codeforces.com/api/user.info?handles=${handle}`;
@@ -175,8 +144,6 @@ const login = (req, res) => {
     .then((response) => response.json())
     .then((data) => {
       res.redirect(`/users/${handle}/0`);
-      // # update DB here to run parallely
-      getAllProblems();
     })
     .catch((err) => console.log(err.message));
 };

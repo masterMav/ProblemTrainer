@@ -12,7 +12,7 @@
 
     <% if(invalidUrl === "1") { %>
     <div class="alert alert-danger" role="alert">
-      INVALID URL: Please enter correct url
+      INVALID PROBLEM CODE: Please enter correct problem code.
     </div>
     <% } else if(invalidUrl === "2") { %>
     <div class="alert alert-danger" role="alert">
@@ -40,8 +40,8 @@
             <input
               type="text"
               class="form-control"
-              placeholder="Enter CodeForces problem Link"
-              name="problemLink"
+              placeholder="Enter ContestId_index of CF problem"
+              name="problemCode"
               required
             />
             <button
